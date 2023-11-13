@@ -78,7 +78,7 @@ cdk bootstrap ACCOUNT-NUMBER/REGION # e.g. 1111111111/us-east-1
 ```
 
 
-**Note:** - [Install docker and run it](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-docker.html) as the aws-lambda-python-alpha package that is used to provide constructs for Python Lambda function will be using Docker.
+**Note:** [Install docker and run it](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-docker.html) as the aws-lambda-python-alpha package that is used to provide constructs for Python Lambda function will be using Docker.
 
 8. Deploy the stack:
 
@@ -87,7 +87,7 @@ cdk synth
 cdk deploy
 ```
 
-**Note:** - Ensure that the CDK stack is deployed in the same region as the AWS Secrets Manager secret
+**Note:** Ensure that the CDK stack is deployed in the same region as the AWS Secrets Manager secret
 
 
 ## How it works
@@ -120,6 +120,7 @@ Example:
 **Note:** Password Requirements 8-character minimum length and at least 1 number, 1 lowercase letter, and 1 special character
 
 **Receiving message**
+
 The new user should now receive a message on WhatsApp with the OTP which they can use for verification.
 
 

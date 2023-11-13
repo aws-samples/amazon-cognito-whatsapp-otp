@@ -59,19 +59,19 @@ def send_whatsapp_message(secret, to_number, url, otp):
             print("Message sent successfully")
 
 def decrypt(ciphertext):
-                    client = aws_encryption_sdk.EncryptionSDKClient(commitment_policy=CommitmentPolicy.REQUIRE_ENCRYPT_ALLOW_DECRYPT)
-                    try:
-                        decrypted_text, encryptor_header = client.decrypt(source=ciphertext,key_provider=master_key_provider)
-                    except DecryptKeyError as err:
-                        err_info = "Error decrypting with KMS key. Please check if the KMS key with ARN {} exists and the role that the CustomSMSSender Lambda function assumes has the kms:Decrypt permission on the key".format(kms_key_arn)
-                        exc_type, exc_value, exc_traceback = sys.exc_info()
-                        err_msg = json.dumps({"errorType": exc_type.__name__,
-                                              "errorMessage": str(exc_value),
-                                              "errorInfo" : err_info,
-                                              "stackTrace": traceback.format_exception(exc_type, exc_value, exc_traceback)})
-                        logger.error(err_msg)
-                        raise err
-                    return decrypted_text.decode()
+    client = aws_encryption_sdk.EncryptionSDKClient(commitment_policy=CommitmentPolicy.REQUIRE_ENCRYPT_ALLOW_DECRYPT)
+    try:
+        decrypted_text, encryptor_header = client.decrypt(source=ciphertext,key_provider=master_key_provider)
+    except DecryptKeyError as err:
+        err_info = "Error decrypting with KMS key. Please check if the KMS key with ARN {} exists and the role that the CustomSMSSender Lambda function assumes has the kms:Decrypt permission on the key".format(kms_key_arn)
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        err_msg = json.dumps({"errorType": exc_type.__name__,
+                              "errorMessage": str(exc_value),
+                              "errorInfo" : err_info,
+                              "stackTrace": traceback.format_exception(exc_type, exc_value, exc_traceback)})
+        logger.error(err_msg)
+        raise err
+    return decrypted_text.decode()
 
 
 def handler(event, context):
