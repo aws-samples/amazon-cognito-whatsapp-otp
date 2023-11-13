@@ -26,23 +26,23 @@ Important: this application uses various AWS services and there are costs associ
 
 ## Deployment Instructions
 
-1. [Create a Secret Manager Secret](https://docs.aws.amazon.com/secretsmanager/latest/userguide/create_secret.html) and set the secret to the WhatsApp Access Token and copy the ARN. This step needs to be performed from AWS console so that the access token is not stored in any of the files or in the command history.
+1. [Create an AWS Secrets Manager Secret](https://docs.aws.amazon.com/secretsmanager/latest/userguide/create_secret.html) and set the secret to the WhatsApp Access Token and copy the ARN. This step needs to be performed from AWS console so that the access token is not stored in any of the files or in the command history.
 
-Login into your AWS account and go to Secret Manager service in the AWS Console in the region of your choice. Then select the Store a new secret button.
+Login into your AWS account and go to AWS Secrets Manager service in the AWS Console in the region of your choice. Then select the Store a new secret button.
 
-For the secret type select Other type of secret and under Key/value pair select the Plaintext tab and enter the WhatsApp access token. For encryption key, you can either encrypt using the KMS key that Secrets Manager creates or a customer managed KMS key that you create. Select Next, provide the Secret name as WhatsAppAccessToken, select Next and click the Store button to create the Secret.Note the secret ARN as this will be needed for the next step.
+For the secret type select Other type of secret and under Key/value pair select the Plaintext tab and enter the WhatsApp access token. For encryption key, you can either encrypt using the AWS KMS key that AWS Secrets Manager creates or a customer managed AWS KMS key that you create. Select Next, provide the Secret name as WhatsAppAccessToken, select Next and click the Store button to create the Secret. Note the secret ARN as this will be needed for the next step.
 
 
 2. Create a new directory, navigate to that directory in a terminal and clone the GitHub repository:
 
 ```
-git clone https://github.com/aws-samples/cognito-whatsapp-otp
+git clone https://github.com/aws-samples/amazon-cognito-whatsapp-otp
 ```
 
 3. Change directory to the pattern directory:
 
 ```
-cd cognito-whatsapp-otp
+cd amazon-cognito-whatsapp-otp
 ```
 
 4. We now need to configure the phone number ID obtained from WhatsApp, Secret Name and the Secret ARN.
@@ -78,7 +78,7 @@ cdk bootstrap ACCOUNT-NUMBER/REGION # e.g. 1111111111/us-east-1
 ```
 
 
-Note - [Install docker and run it](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-docker.html) as the aws-lambda-python-alpha package that is used to provide constructs for Python Lambda function will be using Docker.
+**Note:** - [Install docker and run it](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-docker.html) as the aws-lambda-python-alpha package that is used to provide constructs for Python Lambda function will be using Docker.
 
 8. Deploy the stack:
 
@@ -87,6 +87,9 @@ cdk synth
 cdk deploy
 ```
 
+**Note:** - Ensure that the CDK stack is deployed in the same region as the AWS Secrets Manager secret
+
+
 ## How it works
 
 This pattern creates an AWS Lambda function which is the custom sms sender Lambda that gets triggered when notification messages are to be sent from Amazon Cognito. The AWS Lambda makes the API call to send the message through WhatsApp. 
@@ -94,9 +97,9 @@ This pattern creates an AWS Lambda function which is the custom sms sender Lambd
 These are the steps involved in this pattern:
 
 1. User signs up in Amazon Cognito Userpool
-2. Amazon Cognito invokes custom SMS sender AWS Lambda function. Amazon Cognito sends user attributes, including the phone number, and the one-time code(encrypted secrets) to your Lambda function 
-3. The AWS Lambda decrypts the on time code by making the Decrypt API call to the AWS KMS Key
-4. AWS Lambda obtains the WhatsApp access token from the AWS Secrets Manager.  AWS Lambda also parses phone number, user attributes and encrypted secrets. 
+2. Amazon Cognito invokes custom SMS sender AWS Lambda function. Amazon Cognito sends user attributes, including the phone number, and the one-time code(encrypted secrets) to the AWS Lambda function 
+3. The AWS Lambda decrypts the one-time code by making use of the Decrypt API call to the AWS KMS Key
+4. AWS Lambda obtains the WhatsApp access token from AWS Secrets Manager. AWS Lambda also parses phone number, user attributes and encrypted secrets. 
 5. AWS Lambda sends a POST API call to the WhatsApp API and the WhatsApp message gets delivered to the customer.
 
 <img src="./images/architecture-diagram.png" width="100%"/>
@@ -104,9 +107,9 @@ These are the steps involved in this pattern:
 
 ## **Testing** 
 
-**Signing up a user on Cognito should trigger the Lambda function which will send the OTP**
+### **Signing up a user on Cognito should trigger the Lambda function which will send the OTP**
 
-1. Run the following CLI command replacing the client ID with the output of cognitocustomsmssenderclientappid from CDK output, username, password, email address, name, phone number, and AWS region to  sign up a new Cognito user
+Run the following CLI command replacing the client ID with the output of cognitocustomsmssenderclientappid from CDK output, username, password, email address, name, phone number, and AWS region to  sign up a new Cognito user
 
 
 `aws cognito-idp sign-up --client-id <cognitocustomsmssenderclientappid> --username <TestUserPhoneNumber> --password <Password> --user-attributes Name="email",Value="<TestUserEmail>" Name="name",Value="<TestUserName>" Name="phone_number",Value="<TestPhonenumber>" --region <AWSRegion>`
@@ -114,9 +117,9 @@ These are the steps involved in this pattern:
 Example:
 `aws cognito-idp sign-up --client-id xxxxxxxxxxxxxx --username +123456787990 --password Test@654321 --user-attributes Name="email",Value="jane@example.com" Name="name",Value="Jane" Name="phone_number",Value="+12345678799" --region us-east-1`
 
-Note: Password Requirements 8-character minimum length and at least 1 number, 1 lowercase letter, and 1 special character
+**Note:** Password Requirements 8-character minimum length and at least 1 number, 1 lowercase letter, and 1 special character
 
-**Receiving message**
+### **Receiving message**
 The new user should now receive a message on WhatsApp with the OTP which they can use for verification.
 
 
