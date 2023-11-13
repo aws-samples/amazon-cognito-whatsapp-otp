@@ -107,7 +107,7 @@ These are the steps involved in this pattern:
 
 ## **Testing** 
 
-### **Signing up a user on Cognito should trigger the Lambda function which will send the OTP**
+**Signing up a user on Cognito should trigger the Lambda function which will send the OTP**
 
 Run the following CLI command replacing the client ID with the output of cognitocustomsmssenderclientappid from CDK output, username, password, email address, name, phone number, and AWS region to  sign up a new Cognito user
 
@@ -119,7 +119,7 @@ Example:
 
 **Note:** Password Requirements 8-character minimum length and at least 1 number, 1 lowercase letter, and 1 special character
 
-### **Receiving message**
+**Receiving message**
 The new user should now receive a message on WhatsApp with the OTP which they can use for verification.
 
 
