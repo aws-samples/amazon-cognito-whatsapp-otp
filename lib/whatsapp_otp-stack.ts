@@ -22,7 +22,7 @@ export class WhatsappOtpStack extends cdk.Stack {
       pendingWindow: Duration.days(7),
       alias: 'alias/customsmssenderKey',
       description: 'KMS key for encrypting cognito code',
-      enableKeyRotation: false,
+      enableKeyRotation: true,
     });
 
   // Permissions required by Cognito encrypt code using KMS key
@@ -55,7 +55,6 @@ export class WhatsappOtpStack extends cdk.Stack {
       const lambda_role = new iam.Role (this, 'cognito-customsmssender-lambda-role',{
         assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
         description:'Lambda Execution Role for Cognito Custom SMS Sender',
-        roleName:'cognito-custom-sms-sender-lambda-role',
         managedPolicies:[iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole')]
       });
 
