@@ -45,16 +45,18 @@ git clone https://github.com/aws-samples/amazon-cognito-whatsapp-otp
 cd amazon-cognito-whatsapp-otp
 ```
 
-4. We now need to configure the phone number ID obtained from WhatsApp, Secret Name and the Secret ARN.
+4. We now need to configure the phone number ID obtained from WhatsApp, Secret Name, Secret ARN and the Cognito userpool self sign up option needs to be set to true.
 
-    * Open lib/constants.ts file and edit the fields
+**Note** - It’s important to know that if you activate user sign-up in your user pool, anyone on the internet can sign up for an account and sign in to your apps.
+
+Open lib/constants.ts file and edit the fields
 
 ```
 export const PHONE_NUMBER_ID = ''; //e.g 0123456789
 export const SECRET_NAME = ''; //e.g WhatsAppAccessToken
-export const SECRET_ARN = "" //e.g arn:aws:secretsmanager:us-east-1:0123456789:secret:WhatsAppAccessToken
+export const SECRET_ARN = '' //e.g arn:aws:secretsmanager:us-east-1:0123456789:secret:WhatsAppAccessToken
+export const SELF_SIGNUP = ; //e.g true (without quotes)
 ```
-
 
 
 5. Run below command to install AWS CDK required dependancies
@@ -62,8 +64,6 @@ export const SECRET_ARN = "" //e.g arn:aws:secretsmanager:us-east-1:0123456789:s
 ```
 npm install
 ```
-
-
 
 6. This project uses typescript as client language for AWS CDK. Run the below command to compile typescript to javascript
 

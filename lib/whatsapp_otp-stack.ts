@@ -8,7 +8,7 @@ import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
 import { UserPoolOperation } from 'aws-cdk-lib/aws-cognito';
 import * as lambdapython from '@aws-cdk/aws-lambda-python-alpha';
 import { Construct } from 'constructs';
-import { PHONE_NUMBER_ID, SECRET_NAME, SECRET_ARN  } from './constants';
+import { PHONE_NUMBER_ID, SECRET_NAME, SECRET_ARN, SELF_SIGNUP } from './constants';
 
 
 export class WhatsappOtpStack extends cdk.Stack {
@@ -85,7 +85,7 @@ export class WhatsappOtpStack extends cdk.Stack {
     // Creating cognito user pool
     const cognito_custom_sms_sender_userpool = new cognito.UserPool(this, 'custom-sms-sender-userpool', {
       userPoolName: 'custom-sms-sender-userpool',
-      selfSignUpEnabled: true,
+      selfSignUpEnabled: SELF_SIGNUP,
       signInCaseSensitive: false,
       signInAliases: {
         email: true,
